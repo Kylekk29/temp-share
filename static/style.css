@@ -26,9 +26,9 @@
 
   /* elevation — flat, never heavier than 0 2px 8px */
   --flat-shadow-strength: 0.1;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --lift: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --lift: 0 2px 8px rgba(0, 0, 0, 0.08);
 
   /* shape */
   --radius: 4px;
