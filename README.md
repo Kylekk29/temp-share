@@ -7,7 +7,7 @@ Built to answer one need: *"I want to hand someone a folder right now, without s
 
 ```
 $ tshare ./hkdse-notes chemistry-rev --days 0
-https://temp.kylekaihin.org/chemistry-rev/
+https://temp.example.com/chemistry-rev/
   1 files · 135672 bytes · never expires
 ```
 
