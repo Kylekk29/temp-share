@@ -1,0 +1,29 @@
+[Unit]
+Description=temp-share - temporary file/HTML sharing server
+Documentation=https://github.com/<owner>/temp-share
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/temp-share
+ExecStart=/opt/temp-share/.venv/bin/python /opt/temp-share/server.py
+Environment=PORT=19011
+Environment=MAX_UPLOAD_MB=800
+Restart=on-failure
+RestartSec=3
+User=temp-share
+Group=temp-share
+
+# --- hardening (all optional, remove what your setup cannot support) ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/temp-share/data /opt/temp-share/storage /opt/temp-share/tmp
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_UNIX
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target

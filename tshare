@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# tshare — publish a file/folder to https://temp.kylekaihin.org/<slug>/ in one line.
+#
+#   tshare ./my-site                 # folder -> slug my-site, expires in 7 days
+#   tshare deck.html pitch-deck      # single file -> custom slug
+#   tshare ./a.zip site --days 3 --pw secret
+#   tshare ./my-site once-demo --days 0 --once   # never expires + dies on first visit
+#   tshare --list                    # show active shares + visitors
+#   tshare --del my-site             # delete a share permanently
+#
+# Talks to the local API with the admin token (never leaves the box).
+set -euo pipefail
+
+APP=/home/app/temp-share
+TOKEN="$(<"$APP/.api-token")"
+API=http://127.0.0.1:19011
+
+case "${1:-}" in
+  ""|-h|--help)
+    sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  --list|-l)
+    curl -s "$API/api/shares" -H "X-Token: $TOKEN" | python3 "$APP/py/list_fmt.py"; exit 0 ;;
+  --del|-d)
+    slug="${2:?slug required}"
+    curl -s -X DELETE "$API/api/shares/$slug" -H "X-Token: $TOKEN"; echo; exit 0 ;;
+esac
+
+SRC=""
+SLUG=""
+DAYS=7
+PW=""
+ONCE=false
+positional=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --days)   DAYS="${2:?days required}"; shift 2 ;;
+    --pw|--password) PW="${2:?password required}"; shift 2 ;;
+    --once)   ONCE=true; shift ;;
+    -*)       echo "unknown option: $1" >&2; exit 2 ;;
+    *)        positional+=("$1"); shift ;;
+  esac
+done
+
+SRC="${positional[0]:-}"
+SLUG="${positional[1]:-}"
+
+[[ -n "$SRC" ]] || { echo "no source path given (try --help)" >&2; exit 2; }
+[[ -e "$SRC" ]] || { echo "no such path: $SRC" >&2; exit 1; }
+
+args=(-s -X POST "$API/api/shares" -H "X-Token: $TOKEN" -F "days=$DAYS")
+[[ -n "$SLUG" ]] && args+=(-F "slug=$SLUG")
+[[ -n "$PW" ]] && args+=(-F "password=$PW")
+[[ "$ONCE" == true ]] && args+=(-F "once=true")
+
+if [[ -d "$SRC" ]]; then
+  args+=(-F "local_path=$(cd "$SRC" && pwd)")
+else
+  args+=(-F "file=@$SRC")
+fi
+
+curl "${args[@]}" | python3 "$APP/py/create_fmt.py"
