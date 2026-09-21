@@ -10,53 +10,59 @@
 <body>
 
 <header class="topbar">
-  <div class="brand"><span class="logo">🌀</span><span>temp-share</span></div>
+  <div class="brand"><span class="logo">🌀</span> temp-share</div>
   <div class="who" id="who" hidden>
-    <span class="chip" id="user-chip">admin</span>
     <span class="chip" id="twofa-chip" hidden>2FA on</span>
-    <button class="ghost" id="logout">sign out</button>
+    <button class="ghost sm" id="logout">sign out</button>
   </div>
 </header>
 
 <main class="wrap">
 
-  <!-- ------------------------------------------------------------- login -->
+  <!-- ============================================================ login -->
   <section class="card login-card" id="login">
-    <h1>Sign in</h1>
-    <p class="sub">Control panel for temporary links.</p>
+    <div class="login-head">
+      <span class="logo lg">🌀</span>
+      <div>
+        <h1>temp-share</h1>
+        <p class="sub">Temporary links. Sign in to manage them.</p>
+      </div>
+    </div>
     <form id="login-form" autocomplete="on">
       <label class="field">
         <span>Password</span>
         <input type="password" id="login-pw" name="password" autocomplete="current-password"
-               placeholder="password" required>
+               placeholder="••••••••" required>
       </label>
       <label class="field" id="code-field" hidden>
-        <span>2FA code <em>6 digits from your authenticator</em></span>
-        <input type="text" id="login-code" name="code" inputmode="numeric" autocomplete="one-time-code"
-               maxlength="6" placeholder="000000">
+        <span>2FA code <em>6 digits</em></span>
+        <input type="text" id="login-code" name="code" inputmode="numeric"
+               autocomplete="one-time-code" maxlength="6" placeholder="000000">
       </label>
-      <button type="submit" class="primary">Sign in</button>
+      <button type="submit" class="primary block">Sign in</button>
       <p class="msg" id="login-msg"></p>
-      <p class="hint">First run? The default password is <code>12345678</code> — change it under
-        <b>Settings</b> straight away.</p>
     </form>
+    <p class="hint">First run? Default password is <code>12345678</code> — change it under
+      <b>Settings</b> after you sign in.</p>
   </section>
 
-  <!-- ------------------------------------------------------------- panel -->
+  <!-- ============================================================ panel -->
   <div id="panel" hidden>
 
     <section class="stats" id="stats"></section>
 
+    <!-- -------------------------------------------------- new share -->
     <section class="card">
       <div class="card-head">
         <h2>New share</h2>
-        <span class="pill" id="panic-hint">expires by default in 7 days</span>
+        <span class="pill soft">default: expires in 7 days</span>
       </div>
+
       <form id="new-form">
         <div class="grid">
           <label class="field">
-            <span>Name <em>the URL is /&lt;name&gt;/</em></span>
-            <input name="slug" placeholder="e.g. chemistry-notes" pattern="[a-z0-9][a-z0-9._-]*">
+            <span>Name <em>URL becomes /&lt;name&gt;/</em></span>
+            <input name="slug" placeholder="chemistry-notes" pattern="[a-z0-9][a-z0-9._-]*">
           </label>
           <label class="field">
             <span>Days <em>0 = never expires</em></span>
@@ -64,81 +70,111 @@
           </label>
           <label class="field">
             <span>Password <em>optional, per link</em></span>
-            <input name="password" placeholder="leave empty for public">
+            <input name="password" placeholder="leave empty = public">
           </label>
-          <label class="field file-field">
-            <span>File or .zip <em>or use the CLI for whole folders</em></span>
-            <input name="file" type="file" id="file-input">
-            <span class="drop" id="drop">drop a file here</span>
-          </label>
+          <div class="field">
+            <span>One-time link <em>dies after the first visit</em></span>
+            <label class="switch">
+              <input type="checkbox" name="once" id="once-toggle">
+              <span class="track"><span class="knob"></span></span>
+              <span class="switch-label" id="once-label">Off — link stays live</span>
+            </label>
+          </div>
         </div>
-        <div class="row-between">
-          <label class="check">
-            <input name="once" type="checkbox">
-            <span>One-time link <em>self-destructs after the first visit</em></span>
-          </label>
+
+        <label class="dropzone" id="drop">
+          <input type="file" name="file" id="file-input" hidden>
+          <span class="dz-icon">📄</span>
+          <span class="dz-main">Drop a file or <b>.zip</b> here, or click to choose</span>
+          <span class="dz-sub" id="file-name">nothing selected</span>
+        </label>
+
+        <div class="form-foot">
+          <p class="msg" id="new-msg"></p>
           <button type="submit" class="primary">Publish</button>
         </div>
-        <p class="msg" id="new-msg"></p>
       </form>
     </section>
 
+    <!-- -------------------------------------------------- live shares -->
     <section class="card">
       <div class="card-head">
         <h2>Live shares</h2>
-        <button class="ghost" id="refresh">↻ refresh</button>
+        <button class="ghost sm" id="refresh">↻ refresh</button>
       </div>
       <div id="list" class="shares"></div>
     </section>
 
+    <!-- ----------------------------------------------------- settings -->
     <section class="card">
       <div class="card-head"><h2>Settings</h2></div>
 
-      <h3>Change password</h3>
-      <form id="pw-form" class="inline-form">
-        <label class="field"><span>Current</span>
-          <input type="password" name="current" autocomplete="current-password" required></label>
-        <label class="field"><span>New <em>min 8 characters</em></span>
-          <input type="password" name="new" autocomplete="new-password" required></label>
-        <label class="field"><span>Repeat new</span>
-          <input type="password" id="pw-repeat" autocomplete="new-password" required></label>
-        <button type="submit" class="primary">Update password</button>
-      </form>
-      <p class="msg" id="pw-msg"></p>
-
-      <h3>Two-factor authentication <span class="pill" id="twofa-state">off</span></h3>
-      <div id="twofa-off">
-        <p class="sub">Optional. Adds a 6-digit code from an authenticator app on top of your password.</p>
-        <button class="ghost" id="twofa-start">Set up 2FA</button>
-      </div>
-      <div id="twofa-setup" hidden>
-        <p class="sub">Add this secret to your authenticator app (manual entry), then type the
-          6-digit code it shows.</p>
-        <div class="secret-row">
-          <code id="twofa-secret"></code>
-          <button class="ghost" id="twofa-copy">copy</button>
+      <div class="setting">
+        <div class="setting-head">
+          <h3>Change password</h3>
+          <p class="sub">Stored as a slow hash (scrypt). Nothing is reversible.</p>
         </div>
-        <form id="twofa-form" class="inline-form">
-          <label class="field"><span>Code from app</span>
-            <input name="code" inputmode="numeric" maxlength="6" placeholder="000000" required></label>
-          <button type="submit" class="primary">Turn on 2FA</button>
-          <button type="button" class="ghost" id="twofa-cancel">cancel</button>
+        <form id="pw-form">
+          <div class="grid3">
+            <label class="field"><span>Current</span>
+              <input type="password" name="current" autocomplete="current-password" required></label>
+            <label class="field"><span>New <em>min 8</em></span>
+              <input type="password" name="new" autocomplete="new-password" required></label>
+            <label class="field"><span>Repeat new</span>
+              <input type="password" id="pw-repeat" autocomplete="new-password" required></label>
+          </div>
+          <div class="form-foot">
+            <p class="msg" id="pw-msg"></p>
+            <button type="submit" class="primary">Update password</button>
+          </div>
         </form>
       </div>
-      <div id="twofa-on" hidden>
-        <p class="sub">2FA is protecting this panel.</p>
-        <button class="ghost danger" id="twofa-disable">Turn off 2FA</button>
-      </div>
-      <p class="msg" id="twofa-msg"></p>
 
-      <h3>Danger zone</h3>
-      <p class="sub">Clearing this panel's sign-in sessions logs out every browser, including this one.</p>
-      <button class="ghost danger" id="signout-all">Sign out everywhere</button>
+      <div class="setting">
+        <div class="setting-head">
+          <h3>Two-factor authentication <span class="pill" id="twofa-state">off</span></h3>
+          <p class="sub">Optional 6-digit code from an authenticator app, on top of your password.</p>
+        </div>
+
+        <div id="twofa-off">
+          <button class="ghost" id="twofa-start">Set up 2FA</button>
+        </div>
+
+        <div id="twofa-setup" hidden>
+          <ol class="steps">
+            <li>Open your authenticator app (Google Authenticator, Authy, 1Password…).</li>
+            <li>Add an account → <b>manual entry</b> → paste this secret:</li>
+          </ol>
+          <div class="secret-row">
+            <code id="twofa-secret"></code>
+            <button class="ghost sm" id="twofa-copy">copy</button>
+          </div>
+          <ol class="steps" start="3">
+            <li>Type the 6-digit code the app shows:</li>
+          </ol>
+          <form id="twofa-form" class="inline">
+            <input name="code" inputmode="numeric" maxlength="6" placeholder="000000" required>
+            <button type="submit" class="primary">Turn on</button>
+            <button type="button" class="ghost" id="twofa-cancel">cancel</button>
+          </form>
+        </div>
+
+        <div id="twofa-on" hidden>
+          <button class="ghost danger" id="twofa-disable">Turn off 2FA</button>
+        </div>
+        <p class="msg" id="twofa-msg"></p>
+      </div>
+
+      <div class="setting danger-zone">
+        <div class="setting-head">
+          <h3>Sign out everywhere</h3>
+          <p class="sub">Ends every signed-in browser, including this one.</p>
+        </div>
+        <button class="ghost danger" id="signout-all">Sign out everywhere</button>
+      </div>
     </section>
 
-    <footer>
-      files live under <code>storage/</code> · <a href="/healthz" target="_blank" rel="noopener">health</a>
-    </footer>
+    <footer>files live under <code>storage/</code> · <a href="/healthz" target="_blank" rel="noopener">health</a></footer>
   </div>
 </main>
 
@@ -146,10 +182,9 @@
 
 <script>
 const $ = (s) => document.querySelector(s);
-const $$ = (s) => [...document.querySelectorAll(s)];
 let STATE = { twofa: false, shares: [] };
 
-/* ------------------------------------------------------------------ util */
+/* ----------------------------------------------------------------- util */
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (s) => s ? new Date(s).toLocaleString('en-GB',
@@ -172,7 +207,7 @@ async function api(path, opts = {}) {
   return body;
 }
 
-/* ------------------------------------------------------------------ boot */
+/* ----------------------------------------------------------------- boot */
 function showLogin() {
   $('#login').hidden = false;
   $('#panel').hidden = true;
@@ -183,19 +218,21 @@ function showPanel() {
   $('#login').hidden = true;
   $('#panel').hidden = false;
   $('#who').hidden = false;
-  $('#user-chip').textContent = 'admin';
   $('#twofa-chip').hidden = !STATE.twofa;
   $('#twofa-state').textContent = STATE.twofa ? 'on' : 'off';
+  $('#twofa-state').className = 'pill ' + (STATE.twofa ? 'good' : '');
   $('#twofa-off').hidden = STATE.twofa;
   $('#twofa-on').hidden = !STATE.twofa;
   $('#twofa-setup').hidden = true;
 }
 
 async function boot() {
-  const s = await api('/api/session');
-  STATE.twofa = s.twofa;
-  $('#code-field').hidden = !s.twofa;
-  if (s.authenticated) { showPanel(); await load(); } else { showLogin(); }
+  try {
+    const s = await api('/api/session');
+    STATE.twofa = s.twofa;
+    $('#code-field').hidden = !s.twofa;
+    if (s.authenticated) { showPanel(); await load(); } else { showLogin(); }
+  } catch { showLogin(); }
 }
 
 /* ---------------------------------------------------------------- login */
@@ -229,19 +266,19 @@ function visitRows(visits) {
       <span class="vua">${esc(v.ua)}</span>
       <span class="vt">${fmt(v.t)}</span>
     </div>`).join('');
-  return `<details class="vlog"><summary>who opened it · ${visits.length} recent</summary>${rows}</details>`;
+  return `<details class="vlog">
+      <summary>who opened it <span class="count">${visits.length} recent</span></summary>
+      <div class="vrows">${rows}</div>
+    </details>`;
 }
 
 function renderStats(shares, storage) {
-  const views = shares.reduce((n, s) => n + (s.hits || 0), 0);
-  const visitors = shares.reduce((n, s) => n + (s.unique_ips || 0), 0);
-  const once = shares.filter(s => s.once).length;
   const tiles = [
     ['shares', shares.length],
     ['storage', storage],
-    ['views', views],
-    ['unique IPs', visitors],
-    ['one-time', once],
+    ['views', shares.reduce((n, s) => n + (s.hits || 0), 0)],
+    ['unique IPs', shares.reduce((n, s) => n + (s.unique_ips || 0), 0)],
+    ['one-time', shares.filter(s => s.once).length],
   ];
   $('#stats').innerHTML = tiles.map(([k, v]) =>
     `<div class="tile"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join('');
@@ -254,18 +291,19 @@ async function load() {
     renderStats(j.shares, j.storage);
 
     if (!j.shares.length) {
-      $('#list').innerHTML = '<p class="empty">Nothing live yet. Publish something above, or use the <code>tshare</code> CLI for whole folders.</p>';
+      $('#list').innerHTML = `<p class="empty">Nothing live yet. Publish above — or use the
+        <code>tshare</code> CLI for whole folders.</p>`;
       return;
     }
 
     $('#list').innerHTML = j.shares.map(s => {
       const badges = [
-        `<span class="pill">${esc(s.kind)}</span>`,
-        `<span class="pill">${esc(s.size_human)}</span>`,
-        `<span class="pill">${s.files} file${s.files === 1 ? '' : 's'}</span>`,
-        s.password ? '<span class="pill lock">🔒 password</span>' : '',
-        s.once ? '<span class="pill once">1️⃣ one-time</span>' : '',
-        s.expires_at ? '' : '<span class="pill forever">♾️ never expires</span>',
+        `<span class="pill soft">${esc(s.kind)}</span>`,
+        `<span class="pill soft">${esc(s.size_human)}</span>`,
+        `<span class="pill soft">${s.files} file${s.files === 1 ? '' : 's'}</span>`,
+        s.password ? '<span class="pill warn">🔒 password</span>' : '',
+        s.once ? '<span class="pill info">1️⃣ one-time</span>' : '',
+        s.expires_at ? '' : '<span class="pill good">♾️ never expires</span>',
       ].filter(Boolean).join('');
 
       return `
@@ -276,16 +314,16 @@ async function load() {
         </div>
         <div class="share-meta">
           <span>${s.expires_at ? 'expires ' + fmt(s.expires_at) : 'never expires'}</span>
-          <span>·</span><span>${s.hits} views</span>
-          <span>·</span><span>${s.unique_ips} unique IP${s.unique_ips === 1 ? '' : 's'}</span>
+          <span class="dot">·</span><span>${s.hits} views</span>
+          <span class="dot">·</span><span>${s.unique_ips} unique IP${s.unique_ips === 1 ? '' : 's'}</span>
         </div>
         ${visitRows(s.visits)}
         <div class="acts">
-          <a class="btn" href="/api/shares/${encodeURIComponent(s.slug)}/download" download>⬇ download</a>
-          <button class="ghost" data-copy="${esc(s.url)}">copy link</button>
-          <a class="ghost" href="${esc(s.url)}" target="_blank" rel="noopener">open ↗</a>
-          ${s.expires_at ? `<button class="ghost" data-extend="${esc(s.slug)}">+7 days</button>` : ''}
-          <button class="ghost danger" data-del="${esc(s.slug)}">delete</button>
+          <a class="btn primary sm" href="/api/shares/${encodeURIComponent(s.slug)}/download" download>⬇ download</a>
+          <button class="ghost sm" data-copy="${esc(s.url)}">copy link</button>
+          <a class="ghost sm" href="${esc(s.url)}" target="_blank" rel="noopener">open ↗</a>
+          ${s.expires_at ? `<button class="ghost sm" data-extend="${esc(s.slug)}">+7 days</button>` : ''}
+          <button class="ghost sm danger" data-del="${esc(s.slug)}">delete</button>
         </div>
       </article>`;
     }).join('');
@@ -299,7 +337,7 @@ $('#list').addEventListener('click', async (e) => {
   if (!b) return;
   if (b.dataset.copy) {
     try { await navigator.clipboard.writeText(b.dataset.copy); toast('link copied'); }
-    catch { toast('copy failed — long-press the slug', true); }
+    catch { toast('copy failed — long-press the name', true); }
   }
   if (b.dataset.extend) {
     const body = new FormData(); body.append('days', '7');
@@ -315,7 +353,7 @@ $('#list').addEventListener('click', async (e) => {
 $('#refresh').addEventListener('click', load);
 
 /* ------------------------------------------------------------ new share */
-const drop = $('#drop');
+const drop = $('#drop'), fileInput = $('#file-input');
 ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => {
   e.preventDefault(); drop.classList.add('over');
 }));
@@ -323,11 +361,22 @@ const drop = $('#drop');
   e.preventDefault(); drop.classList.remove('over');
 }));
 drop.addEventListener('drop', (e) => {
-  if (e.dataTransfer.files.length) { $('#file-input').files = e.dataTransfer.files; toast('file attached'); }
+  if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; showFile(); }
 });
-$('#file-input').addEventListener('change', () => {
-  const f = $('#file-input').files[0];
-  if (f) toast(f.name + ' attached');
+fileInput.addEventListener('change', showFile);
+
+function showFile() {
+  const f = fileInput.files[0];
+  const el = $('#file-name');
+  el.textContent = f ? `${f.name} · ${(f.size / 1024).toFixed(1)} KB` : 'nothing selected';
+  el.classList.toggle('has', !!f);
+  drop.classList.toggle('filled', !!f);
+}
+
+$('#once-toggle').addEventListener('change', (e) => {
+  $('#once-label').textContent = e.target.checked
+    ? 'On — deletes itself after one visit' : 'Off — link stays live';
+  $('#once-label').classList.toggle('on', e.target.checked);
 });
 
 $('#new-form').addEventListener('submit', async (e) => {
@@ -336,16 +385,18 @@ $('#new-form').addEventListener('submit', async (e) => {
   if (!body.get('file')?.name) body.delete('file');
   if (!body.get('once')) body.delete('once');
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Publishing…';
+  btn.disabled = true; const old = btn.textContent; btn.textContent = 'Publishing…';
   try {
     const j = await api('/api/shares', {method: 'POST', body});
-    $('#new-msg').innerHTML = `✅ published <a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.url)}</a>`;
-    e.target.reset();
+    $('#new-msg').innerHTML = `✅ <a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.url)}</a>`;
+    e.target.reset(); showFile();
+    $('#once-label').textContent = 'Off — link stays live';
+    $('#once-label').classList.remove('on');
     await load();
   } catch (err) {
     $('#new-msg').textContent = '⚠️ ' + err.message;
   } finally {
-    btn.disabled = false; btn.textContent = 'Publish';
+    btn.disabled = false; btn.textContent = old;
   }
 });
 
@@ -353,7 +404,9 @@ $('#new-form').addEventListener('submit', async (e) => {
 $('#pw-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = new FormData(e.target);
-  if (f.get('new') !== $('#pw-repeat').value) { $('#pw-msg').textContent = '⚠️ the two new passwords differ'; return; }
+  if (f.get('new') !== $('#pw-repeat').value) {
+    $('#pw-msg').textContent = '⚠️ the two new passwords differ'; return;
+  }
   try {
     const j = await api('/api/password', {method: 'POST', body: f});
     $('#pw-msg').textContent = '✅ ' + j.message;
