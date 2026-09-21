@@ -3,179 +3,307 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>temp-share · control</title>
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow">
+<title>temp-share · control panel</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand"><span class="logo">🌀</span> temp-share</div>
-  <div class="who" id="who" hidden>
-    <span class="chip" id="twofa-chip" hidden>2FA on</span>
-    <button class="ghost sm" id="logout">sign out</button>
+<!-- ======================================================= top navigation -->
+<header class="topbar" id="topbar" hidden>
+  <div class="topbar-in">
+    <a class="brand" href="/">
+      <span class="brand-mark">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+      </span>
+      <span>temp-share<span class="brand-sub">Temporary links</span></span>
+    </a>
+
+    <nav class="navlinks" id="navlinks" hidden>
+      <a href="#dashboard" data-nav="dashboard">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Overview
+      </a>
+      <a href="#new" data-nav="new">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+        New share
+      </a>
+      <a href="#shares" data-nav="shares">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        Live shares
+      </a>
+      <a href="#settings" data-nav="settings">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"/><circle cx="12" cy="12" r="3"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="who" id="who" hidden>
+      <span class="chip" id="twofa-chip" hidden>
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></svg>
+        2FA active
+      </span>
+      <button class="ghost sm" id="logout" style="color:#CED4DA;background:transparent;border-color:rgba(255,255,255,.25)">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign out
+      </button>
+    </div>
   </div>
 </header>
 
-<main class="wrap">
-
-  <!-- ============================================================ login -->
-  <section class="card login-card" id="login">
-    <div class="login-head">
-      <span class="logo lg">🌀</span>
-      <div>
-        <h1>temp-share</h1>
-        <p class="sub">Temporary links. Sign in to manage them.</p>
-      </div>
+<!-- ============================================================== login -->
+<section class="login-shell" id="login">
+  <aside class="login-aside">
+    <div class="login-brand">
+      <span class="brand-mark">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+      </span>
+      temp-share
     </div>
-    <form id="login-form" autocomplete="on">
-      <label class="field">
-        <span>Password</span>
-        <input type="password" id="login-pw" name="password" autocomplete="current-password"
-               placeholder="••••••••" required>
-      </label>
-      <label class="field" id="code-field" hidden>
-        <span>2FA code <em>6 digits</em></span>
-        <input type="text" id="login-code" name="code" inputmode="numeric"
-               autocomplete="one-time-code" maxlength="6" placeholder="000000">
-      </label>
-      <button type="submit" class="primary block">Sign in</button>
-      <p class="msg" id="login-msg"></p>
-    </form>
-    <p class="hint">First run? Default password is <code>12345678</code> — change it under
-      <b>Settings</b> after you sign in.</p>
+
+    <div>
+      <h2>Publish a file.<br>Get a link.</h2>
+      <p class="lede">A throwaway hosting box for HTML pages, folders and archives — with expiry, passwords and a visitor log built in.</p>
+      <ul class="login-points">
+        <li>
+          <span class="tick"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span><b>Auto-expiry</b> — 7 days by default, or never</span>
+        </li>
+        <li>
+          <span class="tick"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span><b>Per-link passwords</b> and one-time URLs</span>
+        </li>
+        <li>
+          <span class="tick"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span><b>Visit log</b> — who opened what, and when</span>
+        </li>
+      </ul>
+    </div>
+
+    <p class="foot">temp.kylekaihin.org</p>
+  </aside>
+
+  <div class="login-main">
+    <div class="login-card">
+      <div class="login-head">
+        <p class="kicker">Control panel</p>
+        <h1>Sign in</h1>
+        <p class="sub">Use your admin password to manage shares.</p>
+      </div>
+
+      <form id="login-form" autocomplete="on">
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="login-pw" name="password" autocomplete="current-password"
+                 placeholder="••••••••" required>
+        </label>
+        <label class="field" id="code-field" hidden>
+          <span>2FA code <em>6 digits</em></span>
+          <input type="text" id="login-code" name="code" inputmode="numeric"
+                 autocomplete="one-time-code" maxlength="6" placeholder="000000"
+                 style="text-align:center;letter-spacing:.3em;font-family:var(--font-mono)">
+        </label>
+        <button type="submit" class="primary block">
+          <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+          Sign in
+        </button>
+        <p class="msg" id="login-msg"></p>
+      </form>
+
+      <p class="hint">First run? The default password is <code>12345678</code> — change it under
+        <b>Settings</b> right after you sign in.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== panel -->
+<main class="wrap" id="panel" hidden>
+
+  <!-- ------------------------------------------------------- overview -->
+  <section class="card" id="dashboard">
+    <div class="card-head">
+      <div>
+        <h2>
+          <svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Overview
+        </h2>
+        <p class="lede">Everything currently live on this host.</p>
+      </div>
+      <button class="ghost" id="refresh">
+        <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        Refresh
+      </button>
+    </div>
+    <div class="stats" id="stats"></div>
   </section>
 
-  <!-- ============================================================ panel -->
-  <div id="panel" hidden>
+  <!-- ------------------------------------------------------ new share -->
+  <section class="card" id="new">
+    <div class="card-head">
+      <div>
+        <h2>
+          <svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+          New share
+        </h2>
+        <p class="lede">Upload a file or a <code>.zip</code> — or use the <code>tshare</code> CLI for whole folders.</p>
+      </div>
+      <span class="pill soft">Expires in 7 days by default</span>
+    </div>
 
-    <section class="stats" id="stats"></section>
-
-    <!-- -------------------------------------------------- new share -->
-    <section class="card">
-      <div class="card-head">
-        <h2>New share</h2>
-        <span class="pill soft">default: expires in 7 days</span>
+    <form id="new-form">
+      <div class="grid">
+        <label class="field">
+          <span>Name <em>The URL becomes /&lt;name&gt;/</em></span>
+          <input name="slug" placeholder="chemistry-notes" pattern="[a-z0-9][a-z0-9._-]*">
+        </label>
+        <label class="field">
+          <span>Days <em>0 = never expires</em></span>
+          <input name="days" type="number" value="7" min="0">
+        </label>
+        <label class="field">
+          <span>Password <em>Optional, per link</em></span>
+          <input name="password" placeholder="Leave empty for a public link">
+        </label>
+        <div class="field">
+          <span>One-time link <em>Dies after the first visit</em></span>
+          <label class="switch">
+            <input type="checkbox" name="once" id="once-toggle">
+            <span class="track"><span class="knob"></span></span>
+            <span class="switch-label" id="once-label">Off — link stays live</span>
+          </label>
+        </div>
       </div>
 
-      <form id="new-form">
-        <div class="grid">
-          <label class="field">
-            <span>Name <em>URL becomes /&lt;name&gt;/</em></span>
-            <input name="slug" placeholder="chemistry-notes" pattern="[a-z0-9][a-z0-9._-]*">
-          </label>
-          <label class="field">
-            <span>Days <em>0 = never expires</em></span>
-            <input name="days" type="number" value="7" min="0">
-          </label>
-          <label class="field">
-            <span>Password <em>optional, per link</em></span>
-            <input name="password" placeholder="leave empty = public">
-          </label>
-          <div class="field">
-            <span>One-time link <em>dies after the first visit</em></span>
-            <label class="switch">
-              <input type="checkbox" name="once" id="once-toggle">
-              <span class="track"><span class="knob"></span></span>
-              <span class="switch-label" id="once-label">Off — link stays live</span>
-            </label>
-          </div>
+      <label class="dropzone" id="drop">
+        <input type="file" name="file" id="file-input" hidden>
+        <span class="dz-icon">
+          <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+        </span>
+        <span class="dz-main">Drop a file or <b>.zip</b> here, or click to choose</span>
+        <span class="dz-sub" id="file-name">nothing selected</span>
+      </label>
+
+      <div class="form-foot">
+        <p class="msg" id="new-msg"></p>
+        <button type="submit" class="primary">
+          <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Publish
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ---------------------------------------------------- live shares -->
+  <section class="card" id="shares">
+    <div class="card-head">
+      <div>
+        <h2>
+          <svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+          Live shares
+        </h2>
+        <p class="lede">Every published link, newest first.</p>
+      </div>
+    </div>
+    <div id="list" class="shares"></div>
+  </section>
+
+  <!-- ------------------------------------------------------- settings -->
+  <section class="card" id="settings">
+    <div class="card-head">
+      <div>
+        <h2>
+          <svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"/></svg>
+          Settings
+        </h2>
+        <p class="lede">Credentials and sessions for this panel.</p>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div class="setting-head">
+        <h3>
+          <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 8.3-8.3"/><path d="m17 6 2 2"/><path d="m14 9 2 2"/></svg>
+          Change password
+        </h3>
+        <p class="sub">Stored as a slow hash (scrypt). Nothing here is reversible.</p>
+      </div>
+      <form id="pw-form">
+        <div class="grid3">
+          <label class="field"><span>Current</span>
+            <input type="password" name="current" autocomplete="current-password" required></label>
+          <label class="field"><span>New <em>min 8 characters</em></span>
+            <input type="password" name="new" autocomplete="new-password" required></label>
+          <label class="field"><span>Repeat new</span>
+            <input type="password" id="pw-repeat" autocomplete="new-password" required></label>
         </div>
-
-        <label class="dropzone" id="drop">
-          <input type="file" name="file" id="file-input" hidden>
-          <span class="dz-icon">📄</span>
-          <span class="dz-main">Drop a file or <b>.zip</b> here, or click to choose</span>
-          <span class="dz-sub" id="file-name">nothing selected</span>
-        </label>
-
         <div class="form-foot">
-          <p class="msg" id="new-msg"></p>
-          <button type="submit" class="primary">Publish</button>
+          <p class="msg" id="pw-msg"></p>
+          <button type="submit" class="primary">Update password</button>
         </div>
       </form>
-    </section>
+    </div>
 
-    <!-- -------------------------------------------------- live shares -->
-    <section class="card">
-      <div class="card-head">
-        <h2>Live shares</h2>
-        <button class="ghost sm" id="refresh">↻ refresh</button>
+    <div class="setting">
+      <div class="setting-head">
+        <h3>
+          <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--corporate-blue)"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/></svg>
+          Two-factor authentication
+          <span class="pill" id="twofa-state">Off</span>
+        </h3>
+        <p class="sub">Optional 6-digit code from an authenticator app, on top of your password.</p>
       </div>
-      <div id="list" class="shares"></div>
-    </section>
 
-    <!-- ----------------------------------------------------- settings -->
-    <section class="card">
-      <div class="card-head"><h2>Settings</h2></div>
+      <div id="twofa-off">
+        <button class="ghost" id="twofa-start">Set up 2FA</button>
+      </div>
 
-      <div class="setting">
-        <div class="setting-head">
-          <h3>Change password</h3>
-          <p class="sub">Stored as a slow hash (scrypt). Nothing is reversible.</p>
+      <div id="twofa-setup" hidden>
+        <ol class="steps">
+          <li>Open your authenticator app (Google Authenticator, Authy, 1Password…).</li>
+          <li>Add an account → <b>manual entry</b> → paste this secret:</li>
+        </ol>
+        <div class="secret-row">
+          <code id="twofa-secret"></code>
+          <button class="ghost sm" id="twofa-copy">
+            <svg class="i sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="0"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
         </div>
-        <form id="pw-form">
-          <div class="grid3">
-            <label class="field"><span>Current</span>
-              <input type="password" name="current" autocomplete="current-password" required></label>
-            <label class="field"><span>New <em>min 8</em></span>
-              <input type="password" name="new" autocomplete="new-password" required></label>
-            <label class="field"><span>Repeat new</span>
-              <input type="password" id="pw-repeat" autocomplete="new-password" required></label>
-          </div>
-          <div class="form-foot">
-            <p class="msg" id="pw-msg"></p>
-            <button type="submit" class="primary">Update password</button>
-          </div>
+        <ol class="steps" start="3">
+          <li>Type the 6-digit code the app shows:</li>
+        </ol>
+        <form id="twofa-form" class="inline">
+          <input name="code" inputmode="numeric" maxlength="6" placeholder="000000" required
+                 style="text-align:center;letter-spacing:.3em;font-family:var(--font-mono)">
+          <button type="submit" class="primary">Turn on</button>
+          <button type="button" class="ghost" id="twofa-cancel">Cancel</button>
         </form>
       </div>
 
-      <div class="setting">
-        <div class="setting-head">
-          <h3>Two-factor authentication <span class="pill" id="twofa-state">off</span></h3>
-          <p class="sub">Optional 6-digit code from an authenticator app, on top of your password.</p>
-        </div>
-
-        <div id="twofa-off">
-          <button class="ghost" id="twofa-start">Set up 2FA</button>
-        </div>
-
-        <div id="twofa-setup" hidden>
-          <ol class="steps">
-            <li>Open your authenticator app (Google Authenticator, Authy, 1Password…).</li>
-            <li>Add an account → <b>manual entry</b> → paste this secret:</li>
-          </ol>
-          <div class="secret-row">
-            <code id="twofa-secret"></code>
-            <button class="ghost sm" id="twofa-copy">copy</button>
-          </div>
-          <ol class="steps" start="3">
-            <li>Type the 6-digit code the app shows:</li>
-          </ol>
-          <form id="twofa-form" class="inline">
-            <input name="code" inputmode="numeric" maxlength="6" placeholder="000000" required>
-            <button type="submit" class="primary">Turn on</button>
-            <button type="button" class="ghost" id="twofa-cancel">cancel</button>
-          </form>
-        </div>
-
-        <div id="twofa-on" hidden>
-          <button class="ghost danger" id="twofa-disable">Turn off 2FA</button>
-        </div>
-        <p class="msg" id="twofa-msg"></p>
+      <div id="twofa-on" hidden>
+        <button class="ghost danger" id="twofa-disable">Turn off 2FA</button>
       </div>
+      <p class="msg" id="twofa-msg"></p>
+    </div>
 
-      <div class="setting danger-zone">
-        <div class="setting-head">
-          <h3>Sign out everywhere</h3>
-          <p class="sub">Ends every signed-in browser, including this one.</p>
-        </div>
-        <button class="ghost danger" id="signout-all">Sign out everywhere</button>
+    <div class="setting danger-zone">
+      <div class="setting-head">
+        <h3>
+          <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          Sign out everywhere
+        </h3>
+        <p class="sub">Ends every signed-in browser, including this one.</p>
       </div>
-    </section>
+      <button class="ghost danger" id="signout-all">Sign out everywhere</button>
+    </div>
+  </section>
 
-    <footer>files live under <code>storage/</code> · <a href="/healthz" target="_blank" rel="noopener">health</a></footer>
-  </div>
+  <footer>
+    <span>Files live under <code>storage/</code></span>
+    <span>·</span>
+    <a href="/healthz" target="_blank" rel="noopener">Health check</a>
+  </footer>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -184,7 +312,29 @@
 const $ = (s) => document.querySelector(s);
 let STATE = { twofa: false, shares: [] };
 
-/* ----------------------------------------------------------------- util */
+/* ------------------------------------------------------------------ icons */
+const ICON = {
+  clock: '<path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/>',
+  zap: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/>',
+  lock: '<rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  infinity: '<path d="M12 12c2-2.5 3.6-3.5 5.5-3.5a3.5 3.5 0 0 1 0 7c-2 0-3.5-1-5.5-3.5Zm0 0c-2 2.5-3.6 3.5-5.5 3.5a3.5 3.5 0 0 1 0-7c2 0 3.5 1 5.5 3.5Z"/>',
+  chevron: '<path d="m6 9 6 6 6-6"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  copy: '<rect x="9" y="9" width="13" height="13"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  external: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="M12 14v4"/><path d="M10 16h4"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+};
+const svg = (name, cls = 'sm') =>
+  `<svg class="i ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[name] || ''}</svg>`;
+
+/* ------------------------------------------------------------------ utils */
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (s) => s ? new Date(s).toLocaleString('en-GB',
@@ -192,11 +342,12 @@ const fmt = (s) => s ? new Date(s).toLocaleString('en-GB',
 
 function toast(text, bad = false) {
   const t = $('#toast');
-  t.textContent = text;
+  t.innerHTML = (bad ? svg('alert') : svg('check')) + '<span></span>';
+  t.lastElementChild.textContent = text;
   t.className = 'toast' + (bad ? ' bad' : '');
   t.hidden = false;
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => { t.hidden = true; }, 2200);
+  toast._t = setTimeout(() => { t.hidden = true; }, 2400);
 }
 
 async function api(path, opts = {}) {
@@ -207,20 +358,31 @@ async function api(path, opts = {}) {
   return body;
 }
 
-/* ----------------------------------------------------------------- boot */
+const setMsg = (sel, text, kind = '') => {
+  const el = $(sel);
+  el.className = 'msg' + (kind ? ' ' + kind : '');
+  el.innerHTML = text ? ((kind === 'bad' ? svg('alert') : svg('check')) + '<span>' + text + '</span>') : '';
+};
+
+/* ------------------------------------------------------------------- boot */
 function showLogin() {
   $('#login').hidden = false;
   $('#panel').hidden = true;
+  $('#topbar').hidden = true;
   $('#who').hidden = true;
+  $('#navlinks').hidden = true;
 }
 
 function showPanel() {
   $('#login').hidden = true;
   $('#panel').hidden = false;
+  $('#topbar').hidden = false;
   $('#who').hidden = false;
+  $('#navlinks').hidden = false;
   $('#twofa-chip').hidden = !STATE.twofa;
-  $('#twofa-state').textContent = STATE.twofa ? 'on' : 'off';
-  $('#twofa-state').className = 'pill ' + (STATE.twofa ? 'good' : '');
+  const st = $('#twofa-state');
+  st.textContent = STATE.twofa ? 'On' : 'Off';
+  st.className = 'pill ' + (STATE.twofa ? 'good' : '');
   $('#twofa-off').hidden = STATE.twofa;
   $('#twofa-on').hidden = !STATE.twofa;
   $('#twofa-setup').hidden = true;
@@ -235,7 +397,7 @@ async function boot() {
   } catch { showLogin(); }
 }
 
-/* ---------------------------------------------------------------- login */
+/* ------------------------------------------------------------------ login */
 $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const body = new FormData();
@@ -243,12 +405,12 @@ $('#login-form').addEventListener('submit', async (e) => {
   body.append('code', $('#login-code').value);
   try {
     await api('/api/login', {method: 'POST', body});
-    $('#login-msg').textContent = '';
+    setMsg('#login-msg', '');
     $('#login-pw').value = ''; $('#login-code').value = '';
     STATE.twofa = (await api('/api/session')).twofa;
     showPanel(); await load();
   } catch (err) {
-    $('#login-msg').textContent = '⚠️ ' + err.message;
+    setMsg('#login-msg', err.message, 'bad');
   }
 });
 
@@ -257,7 +419,23 @@ $('#logout').addEventListener('click', async () => {
   showLogin();
 });
 
-/* ----------------------------------------------------------------- list */
+/* -------------------------------------------------------------- nav state */
+const sections = ['dashboard', 'new', 'shares', 'settings'];
+if ('IntersectionObserver' in window) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      document.querySelectorAll('#navlinks a').forEach(a =>
+        a.classList.toggle('on', a.dataset.nav === en.target.id));
+    });
+  }, {rootMargin: '-25% 0px -65% 0px'});
+  addEventListener('load', () => sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  }));
+}
+
+/* ------------------------------------------------------------------- list */
 function visitRows(visits) {
   if (!visits?.length) return '';
   const rows = visits.slice().reverse().map(v => `
@@ -267,18 +445,18 @@ function visitRows(visits) {
       <span class="vt">${fmt(v.t)}</span>
     </div>`).join('');
   return `<details class="vlog">
-      <summary>who opened it <span class="count">${visits.length} recent</span></summary>
+      <summary>${svg('eye', '')} Who opened it <span class="count">${visits.length} recent</span> ${svg('chevron', '')}</summary>
       <div class="vrows">${rows}</div>
     </details>`;
 }
 
 function renderStats(shares, storage) {
   const tiles = [
-    ['shares', shares.length],
-    ['storage', storage],
-    ['views', shares.reduce((n, s) => n + (s.hits || 0), 0)],
-    ['unique IPs', shares.reduce((n, s) => n + (s.unique_ips || 0), 0)],
-    ['one-time', shares.filter(s => s.once).length],
+    ['Shares', shares.length],
+    ['Storage used', storage],
+    ['Total views', shares.reduce((n, s) => n + (s.hits || 0), 0)],
+    ['Unique IPs', shares.reduce((n, s) => n + (s.unique_ips || 0), 0)],
+    ['One-time links', shares.filter(s => s.once).length],
   ];
   $('#stats').innerHTML = tiles.map(([k, v]) =>
     `<div class="tile"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join('');
@@ -291,7 +469,7 @@ async function load() {
     renderStats(j.shares, j.storage);
 
     if (!j.shares.length) {
-      $('#list').innerHTML = `<p class="empty">Nothing live yet. Publish above — or use the
+      $('#list').innerHTML = `<p class="empty">Nothing live yet. Publish something above — or use the
         <code>tshare</code> CLI for whole folders.</p>`;
       return;
     }
@@ -301,29 +479,30 @@ async function load() {
         `<span class="pill soft">${esc(s.kind)}</span>`,
         `<span class="pill soft">${esc(s.size_human)}</span>`,
         `<span class="pill soft">${s.files} file${s.files === 1 ? '' : 's'}</span>`,
-        s.password ? '<span class="pill warn">🔒 password</span>' : '',
-        s.once ? '<span class="pill info">1️⃣ one-time</span>' : '',
-        s.expires_at ? '' : '<span class="pill good">♾️ never expires</span>',
+        s.password ? `<span class="pill warn">${svg('lock')}Password</span>` : '',
+        s.once ? `<span class="pill info">${svg('zap')}One-time</span>` : '',
+        s.expires_at ? '' : `<span class="pill good">${svg('infinity')}Never expires</span>`,
       ].filter(Boolean).join('');
 
       return `
       <article class="share${s.burned ? ' burned' : ''}">
         <div class="share-head">
-          <a class="slug" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.slug)}</a>
+          <a class="slug" href="${esc(s.url)}" target="_blank" rel="noopener">${svg('folder', '')}${esc(s.slug)}</a>
           <div class="badges">${badges}</div>
         </div>
         <div class="share-meta">
+          <span>${svg('clock', '')}</span>
           <span>${s.expires_at ? 'expires ' + fmt(s.expires_at) : 'never expires'}</span>
           <span class="dot">·</span><span>${s.hits} views</span>
           <span class="dot">·</span><span>${s.unique_ips} unique IP${s.unique_ips === 1 ? '' : 's'}</span>
         </div>
         ${visitRows(s.visits)}
         <div class="acts">
-          <a class="btn primary sm" href="/api/shares/${encodeURIComponent(s.slug)}/download" download>⬇ download</a>
-          <button class="ghost sm" data-copy="${esc(s.url)}">copy link</button>
-          <a class="ghost sm" href="${esc(s.url)}" target="_blank" rel="noopener">open ↗</a>
-          ${s.expires_at ? `<button class="ghost sm" data-extend="${esc(s.slug)}">+7 days</button>` : ''}
-          <button class="ghost sm danger" data-del="${esc(s.slug)}">delete</button>
+          <a class="btn primary sm" href="/api/shares/${encodeURIComponent(s.slug)}/download" download>${svg('download')}Download</a>
+          <button class="ghost sm" data-copy="${esc(s.url)}">${svg('copy')}Copy link</button>
+          <a class="btn ghost sm" href="${esc(s.url)}" target="_blank" rel="noopener">${svg('external')}Open</a>
+          ${s.expires_at ? `<button class="ghost sm" data-extend="${esc(s.slug)}">${svg('calendar')}+7 days</button>` : ''}
+          <button class="ghost sm danger" data-del="${esc(s.slug)}">${svg('trash')}Delete</button>
         </div>
       </article>`;
     }).join('');
@@ -336,23 +515,23 @@ $('#list').addEventListener('click', async (e) => {
   const b = e.target.closest('button');
   if (!b) return;
   if (b.dataset.copy) {
-    try { await navigator.clipboard.writeText(b.dataset.copy); toast('link copied'); }
-    catch { toast('copy failed — long-press the name', true); }
+    try { await navigator.clipboard.writeText(b.dataset.copy); toast('Link copied'); }
+    catch { toast('Copy failed — long-press the name', true); }
   }
   if (b.dataset.extend) {
     const body = new FormData(); body.append('days', '7');
     await api(`/api/shares/${b.dataset.extend}/extend`, {method: 'POST', body});
-    toast('extended by 7 days'); load();
+    toast('Extended by 7 days'); load();
   }
   if (b.dataset.del && confirm(`Delete “${b.dataset.del}” and its files permanently?`)) {
     await api(`/api/shares/${b.dataset.del}`, {method: 'DELETE'});
-    toast('deleted'); load();
+    toast('Deleted'); load();
   }
 });
 
-$('#refresh').addEventListener('click', load);
+$('#refresh').addEventListener('click', async () => { await load(); toast('Refreshed'); });
 
-/* ------------------------------------------------------------ new share */
+/* -------------------------------------------------------------- new share */
 const drop = $('#drop'), fileInput = $('#file-input');
 ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => {
   e.preventDefault(); drop.classList.add('over');
@@ -385,33 +564,34 @@ $('#new-form').addEventListener('submit', async (e) => {
   if (!body.get('file')?.name) body.delete('file');
   if (!body.get('once')) body.delete('once');
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; const old = btn.textContent; btn.textContent = 'Publishing…';
+  btn.disabled = true;
   try {
     const j = await api('/api/shares', {method: 'POST', body});
-    $('#new-msg').innerHTML = `✅ <a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.url)}</a>`;
+    setMsg('#new-msg', ``, 'ok');
+    $('#new-msg').innerHTML = svg('check') + `<a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.url)}</a>`;
     e.target.reset(); showFile();
     $('#once-label').textContent = 'Off — link stays live';
     $('#once-label').classList.remove('on');
     await load();
   } catch (err) {
-    $('#new-msg').textContent = '⚠️ ' + err.message;
+    setMsg('#new-msg', err.message, 'bad');
   } finally {
-    btn.disabled = false; btn.textContent = old;
+    btn.disabled = false;
   }
 });
 
-/* ------------------------------------------------------------- settings */
+/* --------------------------------------------------------------- settings */
 $('#pw-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = new FormData(e.target);
   if (f.get('new') !== $('#pw-repeat').value) {
-    $('#pw-msg').textContent = '⚠️ the two new passwords differ'; return;
+    setMsg('#pw-msg', 'The two new passwords differ', 'bad'); return;
   }
   try {
     const j = await api('/api/password', {method: 'POST', body: f});
-    $('#pw-msg').textContent = '✅ ' + j.message;
+    setMsg('#pw-msg', j.message, 'ok');
     e.target.reset();
-  } catch (err) { $('#pw-msg').textContent = '⚠️ ' + err.message; }
+  } catch (err) { setMsg('#pw-msg', err.message, 'bad'); }
 });
 
 $('#twofa-start').addEventListener('click', async () => {
@@ -420,14 +600,14 @@ $('#twofa-start').addEventListener('click', async () => {
     $('#twofa-secret').textContent = j.secret;
     $('#twofa-setup').hidden = false;
     $('#twofa-off').hidden = true;
-  } catch (err) { $('#twofa-msg').textContent = '⚠️ ' + err.message; }
+  } catch (err) { setMsg('#twofa-msg', err.message, 'bad'); }
 });
 $('#twofa-copy').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText($('#twofa-secret').textContent); toast('secret copied'); }
-  catch { toast('copy failed', true); }
+  try { await navigator.clipboard.writeText($('#twofa-secret').textContent); toast('Secret copied'); }
+  catch { toast('Copy failed', true); }
 });
 $('#twofa-cancel').addEventListener('click', () => {
-  $('#twofa-setup').hidden = true; $('#twofa-off').hidden = false; $('#twofa-msg').textContent = '';
+  $('#twofa-setup').hidden = true; $('#twofa-off').hidden = false; setMsg('#twofa-msg', '');
 });
 $('#twofa-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -436,19 +616,19 @@ $('#twofa-form').addEventListener('submit', async (e) => {
   try {
     const j = await api('/api/2fa/enable', {method: 'POST', body});
     STATE.twofa = true; showPanel(); await load();
-    $('#twofa-msg').textContent = '✅ ' + j.message;
-  } catch (err) { $('#twofa-msg').textContent = '⚠️ ' + err.message; }
+    setMsg('#twofa-msg', j.message, 'ok');
+  } catch (err) { setMsg('#twofa-msg', err.message, 'bad'); }
 });
 $('#twofa-disable').addEventListener('click', async () => {
   if (!confirm('Turn off two-factor authentication?')) return;
   const j = await api('/api/2fa/disable', {method: 'POST'});
   STATE.twofa = false; showPanel(); await load();
-  $('#twofa-msg').textContent = '✅ ' + j.message;
+  setMsg('#twofa-msg', j.message, 'ok');
 });
 $('#signout-all').addEventListener('click', async () => {
   if (!confirm('Sign out of every browser?')) return;
   await api('/api/logout', {method: 'POST'});
-  showLogin(); toast('signed out everywhere');
+  showLogin(); toast('Signed out everywhere');
 });
 
 boot();

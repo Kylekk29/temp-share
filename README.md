@@ -28,6 +28,28 @@ https://temp.example.com/chemistry-rev/
 | **Two front doors** | a control panel (password + optional TOTP 2FA) and a `tshare` CLI |
 | **One-click download** | any share can be pulled down as a zip straight from the panel |
 | **Admin settings** | change password, enable/disable 2FA, sign out everywhere |
+| **Self-hosted fonts** | Lato + JetBrains Mono ship in `static/fonts/` — no CDN, works offline |
+
+## UI design system ("Flat Design Corporativo")
+
+The panel, the login screen and the public share pages share one flat corporate language.
+Everything lives in `static/style.css` — change it there, never inline.
+
+| Token | Value |
+|---|---|
+| Primary / accent | Corporate Blue `#007BFF` |
+| Surface (dark chrome) | Dark Grey `#343A40` |
+| Page background | Light Grey `#F8F9FA` |
+| Semantic | green `#28A745` · amber `#FFC107` · red `#DC3545` · cyan `#17A2B8` |
+| Corner radius | `4px` everywhere (sharp corners by design) |
+| Type | Lato 400/700/900, JetBrains Mono for metadata |
+| Elevation | flat; never heavier than `0 2px 8px rgba(0,0,0,.08)` |
+| Motion | transform + opacity only; `prefers-reduced-motion` respected |
+| z-index | nav `100` · overlay `200` · modal `300` · toast `500` |
+
+Rules: solid colours only (no decorative gradients), no emoji in the UI — inline SVG icons only,
+no pure black, no 3-equal-column feature rows. The seed tokens (CSS variables) are declared once in
+`:root` and referenced everywhere else.
 
 ## Quick start (local, 60 seconds)
 

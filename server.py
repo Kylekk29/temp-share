@@ -663,39 +663,58 @@ def extend_share(slug: str, request: Request, days: int = Form(7)) -> JSONRespon
 
 
 # --------------------------------------------------------------- browsing ---
+# Inline SVG icons for the server-rendered pages (flat corporate set, 24x24 grid).
+_ICON_FOLDER = ('<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>')
+_ICON_FILE = ('<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>')
+_ICON_BACK = ('<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>')
+_ICON_LOCK = ('<svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>')
+_PAGE_HEAD = ("""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow">
+<title>{title}</title><link rel="stylesheet" href="/static/style.css"></head>""")
+
+
 def listing(path: Path, slug: str, rel: str) -> str:
     rows = []
     entries = sorted(path.iterdir(), key=lambda p: (p.is_file(), p.name.lower()))
     if rel:
         parent = "/".join(rel.strip("/").split("/")[:-1])
         href = f"/{slug}/{parent + '/' if parent else ''}"
-        rows.append(f'<li class="up"><a href="{html.escape(href)}">⬅ back</a></li>')
+        rows.append(f'<li class="up"><a href="{html.escape(href)}">{_ICON_BACK}Back</a></li>')
     for p in entries:
         if p.name.startswith("."):
             continue
         name = p.name + ("/" if p.is_dir() else "")
         href = f"/{slug}/{(rel + '/' if rel else '')}{p.name}" + ("/" if p.is_dir() else "")
+        icon = _ICON_FOLDER if p.is_dir() else _ICON_FILE
         size = "" if p.is_dir() else f'<span class="sz">{human(p.stat().st_size)}</span>'
-        rows.append(f'<li><a href="{html.escape(href)}">{html.escape(name)}</a>{size}</li>')
-    body = "\n".join(rows) or '<li class="up">empty</li>'
-    return f"""<!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{html.escape(slug)}</title><link rel="stylesheet" href="/static/style.css"></head>
-<body class="listing"><main class="card">
+        rows.append(f'<li><a href="{html.escape(href)}">{icon}{html.escape(name)}</a>{size}</li>')
+    body = "\n".join(rows) or '<li class="up">This folder is empty.</li>'
+    head = _PAGE_HEAD.format(title=html.escape(slug))
+    return f"""{head}
+<body class="listing"><main class="wrap"><div class="card">
 <p class="crumb">temp.kylekaihin.org / <b>{html.escape(slug)}</b>/{html.escape(rel)}</p>
-<ul class="files">{body}</ul></main></body></html>"""
+<ul class="files">{body}</ul></div></main></body></html>"""
 
 
 def gate(slug: str, error: bool = False) -> HTMLResponse:
-    msg = '<p class="err">Wrong password.</p>' if error else ""
+    msg = '<p class="err">Wrong password — try again.</p>' if error else ""
+    head = _PAGE_HEAD.format(title="Password required")
     return HTMLResponse(
-        f"""<!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>locked</title><link rel="stylesheet" href="/static/style.css"></head>
-<body><main class="card gate"><h1>🔒 password required</h1>{msg}
+        f"""{head}
+<body><main class="gate-page"><div class="gate">
+<div class="glyph">{_ICON_LOCK}</div>
+<h1>Password required</h1>
+<p class="sub">This link is protected. Enter the password to continue.</p>
+{msg}
 <form method="post" action="/{html.escape(slug)}/__auth">
-<input type="password" name="password" placeholder="password" autofocus>
-<button type="submit">Open</button></form></main></body></html>""",
+<input type="password" name="password" placeholder="••••••••" autofocus aria-label="Password">
+<button type="submit" class="primary">Unlock</button></form></div></main></body></html>""",
         status_code=401,
     )
 
@@ -723,10 +742,18 @@ def serve(slug: str, path: str, request: Request) -> Response:
     data = load()
     meta = data.get(slug)
     if not meta:
+        head = _PAGE_HEAD.format(title="Link not found")
         return HTMLResponse(
-            '<body style="font:16px system-ui;background:#0d1117;color:#e6edf3;display:grid;'
-            'place-items:center;height:100vh;margin:0"><div style="text-align:center">'
-            "<h1>404</h1><p>no share called <b>" + html.escape(slug) + "</b></p></div>",
+            head + '<body><main class="gate-page"><div class="gate">'
+            '<div class="glyph" style="background:var(--danger-red-soft);color:var(--danger-red)">'
+            '<svg class="i lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div>'
+            '<h1>Link not found</h1>'
+            '<p class="sub">Nothing is published at <b>' + html.escape(slug) + '</b>. '
+            'It may have expired, been deleted, or been a one-time link that was already opened.</p>'
+            '<a class="btn primary" href="/" style="width:100%">Go to the control panel</a>'
+            '</div></main></body></html>',
             status_code=404,
         )
     if meta.get("pw_hash") and request.cookies.get(f"ts_pw_{slug}") != meta["pw_hash"][:24]:
